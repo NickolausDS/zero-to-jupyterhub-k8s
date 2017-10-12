@@ -31,7 +31,11 @@ data:
   auth.github.client-secret: {{.Values.auth.github.clientSecret | quote}}
   auth.github.callback-url: {{.Values.auth.github.callbackUrl | quote}}
   {{- end }}
-
+  {{ if eq .Values.auth.type "globus" -}}
+  auth.globus.client-id: {{.Values.auth.globus.clientId | quote}}
+  auth.globus.client-secret: {{.Values.auth.globus.clientSecret | quote}}
+  auth.globus.callback-url: {{.Values.auth.globus.callbackUrl | quote}}
+  {{- end }}
   {{ if eq .Values.auth.type "dummy" -}}
   {{ if .Values.auth.dummy.password -}}
   auth.dummy.password: {{ .Values.auth.dummy.password | quote }}

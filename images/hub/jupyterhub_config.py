@@ -161,6 +161,16 @@ elif auth_type == 'github':
     c.GitHubOAuthenticator.oauth_callback_url = get_config('auth.github.callback-url')
     c.GitHubOAuthenticator.client_id = get_config('auth.github.client-id')
     c.GitHubOAuthenticator.client_secret = get_config('auth.github.client-secret')
+elif auth_type == 'globus':
+    c.GlobusOAuthenticator.oauth_callback_url = get_config('auth.globus.callback-url')
+    c.GlobusOAuthenticator.client_id = get_config('auth.globus.client-id')
+    c.GlobusOAuthenticator.client_secret = get_config('auth.globus.client-secret')
+    c.GlobusOAuthenticator.identity_provider = get_config('auth.globus.identity-provider')
+    c.GlobusOAuthenticator.globus_local_endpoint = get_config('auth.globus.globus-local-endpoint')
+    c.GlobusOAuthenticator.revoke_tokens_on_logout = get_config('auth.globus.revoke-tokens-on-logout')
+    c.GlobusOAuthenticator.allow_refresh_tokens = get_config('auth.globus.allow-refresh-tokens')
+    c.GlobusOAuthenticator.scope = get_config('auth.globus.scope')
+    c.GlobusOAuthenticator.exclude = get_config('auth.globus.exclude')
 elif auth_type == 'hmac':
     c.JupyterHub.authenticator_class = 'hmacauthenticator.HMACAuthenticator'
     c.HMACAuthenticator.secret_key = bytes.fromhex(get_config('auth.hmac.secret-key'))

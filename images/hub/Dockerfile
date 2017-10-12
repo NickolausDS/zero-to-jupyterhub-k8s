@@ -18,6 +18,7 @@ RUN pip3 install --no-cache-dir \
          jupyterhub-dummyauthenticator==0.3.1 \
          jupyterhub-tmpauthenticator==0.4 \
          pymysql==0.7.11 \
+         globus_sdk==1.2.1 \
          psycopg2==2.7.1
 
 RUN pip3 --no-cache-dir install git+https://github.com/jupyterhub/kubespawner@746def21
