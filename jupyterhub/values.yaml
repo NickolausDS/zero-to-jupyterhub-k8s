@@ -25,8 +25,8 @@ hub:
   extraConfigMap: {}
   extraEnv: {}
   image:
-    name: jupyterhub/k8s-hub
-    tag: v0.4
+    name: nickolaussaint/jupyterhub-testinghub
+    tag: 77ae096
   resources:
     requests:
       cpu: 0.2
@@ -107,8 +107,8 @@ singleuser:
     capacity: 10Gi
     homeMountPath: /home/jovyan
   image:
-    name: jupyterhub/k8s-singleuser-sample
-    tag: v0.4
+    name: nickolaussaint/jupyterhub-testingsingleuser-sample
+    tag: 3bf055a
   cpu:
     limit:
     guarantee:

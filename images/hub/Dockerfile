@@ -40,6 +40,7 @@ RUN pip3 install --no-cache-dir \
          psycopg2==2.7.1 \
          pycurl==7.43.0 \
          mwoauth==0.3.2 \
+         globus_sdk[jwt]==1.2.1 \
          cryptography==2.0.3
 
 RUN pip3 --no-cache-dir install git+https://github.com/jupyterhub/oauthenticator@80676a3e
