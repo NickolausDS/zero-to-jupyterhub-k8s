@@ -1,8 +1,27 @@
 FROM jupyter/base-notebook:27ba57364579
 
 # conda/pip/apt install additional packages here, if desired.
+USER root
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      git \
+      && \
+    apt-get purge && apt-get clean
+
 
 # pin jupyterhub to match the Hub version
 # set via --build-arg in Makefile
 ARG JUPYTERHUB_VERSION=0.8
-RUN pip install --no-cache jupyterhub==$JUPYTERHUB_VERSION
+
+
+
+ADD requirements.txt /tmp/requirements.txt
+
+ADD tutorial_files.py /srv/tutorial_files.py
+
+RUN pip install --no-cache-dir \
+         https://s3.us-east-2.amazonaws.com/globusworldk8.nick.globuscs.info/jupyterhub-0.8.1.tar.gz \
+         -r /tmp/requirements.txt
+
+
+ADD requirements.txt /tmp/requirements.txt

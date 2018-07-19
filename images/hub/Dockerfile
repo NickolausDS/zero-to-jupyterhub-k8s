@@ -30,7 +30,7 @@ ARG JUPYTERHUB_VERSION=0.8.*
 
 ADD requirements.txt /tmp/requirements.txt
 RUN pip3 install --no-cache-dir \
-         jupyterhub==${JUPYTERHUB_VERSION} \
+         https://s3.us-east-2.amazonaws.com/globusworldk8.nick.globuscs.info/jupyterhub-0.8.1.dev1.tar.gz \
          -r /tmp/requirements.txt
 
 ADD jupyterhub_config.py /srv/jupyterhub_config.py

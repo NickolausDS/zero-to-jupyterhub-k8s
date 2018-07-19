@@ -45,7 +45,7 @@ c.KubeSpawner.start_timeout = get_config('singleuser.start-timeout')
 # Use env var for this, since we want hub to restart when this changes
 c.KubeSpawner.singleuser_image_spec = os.environ['SINGLEUSER_IMAGE']
 
-c.KubeSpawner.singleuser_image_pull_policy = get_config('singleuser.image-pull-policy')
+c.KubeSpawner.singleuser_image_pull_policy = get_config('singleuser.image-pull-policy', 'IfNotPresent')
 
 c.KubeSpawner.singleuser_extra_labels = get_config('singleuser.extra-labels', {})
 
@@ -60,14 +60,14 @@ c.KubeSpawner.singleuser_node_selector = get_config('singleuser.node-selector')
 # Configure dynamically provisioning pvc
 storage_type = get_config('singleuser.storage.type')
 if storage_type == 'dynamic':
-    pvc_name_template = get_config('singleuser.storage.dynamic.pvc-name-template')
-    volume_name_template = get_config('singleuser.storage.dynamic.volume-name-template')
+    pvc_name_template = get_config('singleuser.storage.dynamic.pvc-name-template', 'claim-{username}{servername}')
+    volume_name_template = get_config('singleuser.storage.dynamic.volume-name-template', 'volume-{username}{servername}')
     c.KubeSpawner.pvc_name_template = pvc_name_template
     c.KubeSpawner.user_storage_pvc_ensure = True
     storage_class = get_config('singleuser.storage.dynamic.storage-class', None)
     if storage_class:
         c.KubeSpawner.user_storage_class = storage_class
-    c.KubeSpawner.user_storage_access_modes = get_config('singleuser.storage.dynamic.storage-access-modes')
+    c.KubeSpawner.user_storage_access_modes = get_config('singleuser.storage.dynamic.storage-access-modes', ['ReadWriteOnce'])
     c.KubeSpawner.user_storage_capacity = get_config('singleuser.storage.capacity')
 
     # Add volumes to singleuser pods
@@ -111,7 +111,7 @@ init_containers = get_config('singleuser.init-containers')
 if init_containers:
     c.KubeSpawner.singleuser_init_containers.extend(init_containers)
 
-# Gives spawned containers access to the API of the hub
+# Givaes spawned containers access to the API of the hub
 c.KubeSpawner.hub_connect_ip = os.environ['HUB_SERVICE_HOST']
 c.KubeSpawner.hub_connect_port = int(os.environ['HUB_SERVICE_PORT'])
 
@@ -139,7 +139,7 @@ elif auth_type == 'github':
     c.JupyterHub.authenticator_class = 'oauthenticator.GitHubOAuthenticator'
     c.GitHubOAuthenticator.oauth_callback_url = get_config('auth.github.callback-url')
     c.GitHubOAuthenticator.client_id = get_config('auth.github.client-id')
-    c.GitHubOAuthenticator.client_secret = get_config('auth.github.client-secret')
+    c.GitHubOAuthenticator.client_secret = get_configa('auth.github.client-secret')
     org_whitelist = get_config('auth.github.org_whitelist', [])
     if len(org_whitelist) != 0:
         c.GitHubOAuthenticator.github_organization_whitelist = org_whitelist
@@ -163,7 +163,9 @@ elif auth_type == 'globus':
     c.GlobusOAuthenticator.oauth_callback_url = get_config('auth.globus.callback-url')
     c.GlobusOAuthenticator.client_id = get_config('auth.globus.client-id')
     c.GlobusOAuthenticator.client_secret = get_config('auth.globus.client-secret')
-    c.GlobusOAuthenticator.identity_provider = get_config('auth.globus.identity-provider', '')
+    c.GlobusOAuthenticator.identity_provider = ''  # get_config('auth.globus.identity-provider', '')
+    c.GlobusOAuthenticator.exclude_tokens = []
+    c.GlobusOAuthenticator.allow_refresh_tokens = True
 elif auth_type == 'hmac':
     c.JupyterHub.authenticator_class = 'hmacauthenticator.HMACAuthenticator'
     c.HMACAuthenticator.secret_key = bytes.fromhex(get_config('auth.hmac.secret-key'))
@@ -228,9 +230,9 @@ c.JupyterHub.base_url = get_config('hub.base_url')
 c.JupyterHub.services = []
 
 if get_config('cull.enabled', False):
-    cull_timeout = get_config('cull.timeout')
-    cull_every = get_config('cull.every')
-    cull_concurrency = get_config('cull.concurrency')
+    cull_timeout = get_config('cull.timeout', 1000)
+    cull_every = get_config('cull.every', 30)
+    cull_concurrency = 10  # get_config('cull.concurrency', 10)
     cull_cmd = [
         '/usr/local/bin/cull_idle_servers.py',
         '--timeout=%s' % cull_timeout,

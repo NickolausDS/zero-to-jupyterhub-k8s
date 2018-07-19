@@ -327,7 +327,7 @@ if __name__ == '__main__':
         inactive_limit=options.timeout,
         cull_users=options.cull_users,
         max_age=options.max_age,
-        concurrency=options.concurrency,
+        concurrency=10,
     )
     # schedule first cull immediately
     # because PeriodicCallback doesn't start until the end of the first interval
